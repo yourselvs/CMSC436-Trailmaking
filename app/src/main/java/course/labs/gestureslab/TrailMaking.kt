@@ -116,11 +116,8 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
 
         val gestureOverlay = findViewById<View>(R.id.gestures_overlay) as GestureOverlayView
 
-        // TODO - Make this the target of gesture detection callbacks
         gestureOverlay.addOnGesturePerformedListener(this)
 
-        // TODO - implement OnTouchListener to pass all events received by the
-        // gestureOverlay to the basic gesture detector
         gestureOverlay.setOnTouchListener { v, event -> mGestureDetector!!.onTouchEvent(event) }
 
         // Loads the gesture library
@@ -143,11 +140,8 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
                 .setAudioAttributes(musicAttribute)
                 .build()
 
-        // TODO - load the sound from res/raw/bubble_pop.wav
         mSoundID = mSoundPool!!.load(this, R.raw.bubble_pop, 1)
 
-        // TODO - Set a SoundPool OnLoadCompletedListener that calls
-        // setupGestureDetector()
         mSoundPool?.apply{
             setOnLoadCompleteListener { _, _, status ->
                 setupGestureDetector()
@@ -230,7 +224,6 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
 
     override fun onGesturePerformed(overlay: GestureOverlayView, gesture: Gesture) {
 
-        // TODO - Get gesture predictions and assign it to 'predictions' variable below
         val predictions: ArrayList<Prediction>? = mLibrary?.recognize(gesture)
 
         if (predictions!!.size > 0) {
@@ -239,12 +232,6 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
             val prediction = predictions[0]
 
 
-            // TODO - Ignore predictions with a score of < MIN_PRED_SCORE and display a
-            // toast message informing the user that no prediction was made. If
-            // the prediction
-            // matches the openMenu gesture, open the menu. If the prediction
-            // matches
-            // the addTen gesture, add 10 bubbles to the screen.
             if (prediction.score > MIN_PRED_SCORE) {
                 when (prediction.name) {
                     "openMenu"-> {
