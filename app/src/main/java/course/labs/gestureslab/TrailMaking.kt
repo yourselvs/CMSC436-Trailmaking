@@ -38,9 +38,6 @@ class TrailMaking : Activity() {
     // Gesture Detector
     private var mGestureDetector: GestureDetector? = null
 
-    // Gesture Library
-    private var mLibrary: GestureLibrary? = null
-
     private val circlePlacement = arrayListOf(
             Pair(161,2116),Pair(169,719),Pair(925,586),
             Pair(783,1540),Pair(226,1246),Pair(1207,2165),
@@ -49,7 +46,6 @@ class TrailMaking : Activity() {
             Pair(604,1143),Pair(1005,273),Pair(558,288),
             Pair(283,254)
     )
-
 
     private val circleTV = ArrayList<TextView>()
 
