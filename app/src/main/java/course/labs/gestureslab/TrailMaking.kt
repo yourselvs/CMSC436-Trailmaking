@@ -98,6 +98,7 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
         for(i in 0 .. bubblePlacement.size - 1){
             var bView = BubbleView(mFrame!!.context, bubblePlacement.get(i).first.toFloat(),
                     bubblePlacement.get(i).second.toFloat())
+            bView.setNum(i+1)
             mFrame!!.addView(bView)
 
             val tv_dynamic = TextView(this)
@@ -171,6 +172,7 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
                     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
                         var bool = false
                         var i = 0
+
                         while(i < mFrame!!.childCount){
                             if(mFrame?.getChildAt(i) is BubbleView){
                                 var bview = mFrame?.getChildAt(i) as BubbleView
@@ -178,21 +180,28 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
                                 //TODO just need to finish with drawing lines and changing the color
                                 if(bview.intersects(event.x,event.y)){
                                     var j:Int=0
+                                    for(k in 0 .. bubblePlacement.size - 1){
+                                        if(bview.getmPosx()+128 == bubblePlacement.get(k).first.toFloat()){
+                                            var b = 0
+                                            while(b < mFrame!!.childCount){
+                                                var prevbview = mFrame?.getChildAt(i) as BubbleView
+                                                if(prevbview.getNum() + 1 == bview.getNum()){
+                                                    bubbleTV.get(k).setTextColor(Color.GREEN)
+                                                }
+                                            }
 
-
-                                    for(k in bubblePlacement){
-                                        if(bview.getmPosx()+128 == k.first.toFloat()){
                                             previousx = (bview.getmPosx()+128).toInt()
                                             previousy = (bview.getmPosy()+128).toInt()
 
 
 
-                                            j = bubblePlacement.indexOf(k)
+
+
 
                                         }
                                     }
 
-                                    bubbleTV.get(j).setTextColor(Color.GREEN)
+
 
                                 }else{
 
@@ -283,6 +292,10 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
         private var mRotate: Long = 0
         private var mDRotate: Long = 0
 
+        //what number is theis bubbleview, and has it been visited
+        private var number = 0
+        private var bool = false
+
         // Return true if the BubbleView is not on the screen after the move
         // operation
         private val isOutOfView: Boolean
@@ -340,6 +353,20 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
         }
         fun getmPosy():Float{
             return mYPos
+        }
+
+        fun setNum(i:Int){
+            number = i
+        }
+        fun getNum():Int{
+           return number
+        }
+
+        fun visit(){
+            bool = true
+        }
+        fun beenvisited():Boolean{
+            return bool
         }
 
         // Start moving the BubbleView & updating the display
