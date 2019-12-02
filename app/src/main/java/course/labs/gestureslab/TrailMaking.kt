@@ -149,7 +149,7 @@ class BubbleActivity : Activity() {
                                     if(bview.getNum() == numberOn){
                                         //TODO - Firebase stuff goes here
 if(numberOn ==1){ previousx = (bview.getmPosx()+128).toInt()
-previousy = (bview.getmPosy()+128).toInt()}                          
+previousy = (bview.getmPosy()+128).toInt()}
                                         bubbleTV.get(numberOn-1).setTextColor(Color.GREEN)
                                         //TODO draw lines
                                         numberOn++
