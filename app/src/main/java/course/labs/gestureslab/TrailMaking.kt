@@ -1,17 +1,8 @@
 package course.labs.gestureslab
 
-import java.util.Random
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
-
-import java.util.ArrayList
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.gesture.GestureLibraries
-import android.gesture.GestureLibrary
 import android.gesture.GestureOverlayView
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -28,8 +19,6 @@ import android.widget.FrameLayout
 import android.graphics.Color
 import android.widget.TextView
 import java.sql.Time
-import java.sql.Timestamp
-import kotlin.collections.ArrayList
 
 
 class TrailMaking : Activity() {
