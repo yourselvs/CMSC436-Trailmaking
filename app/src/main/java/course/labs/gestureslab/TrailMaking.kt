@@ -95,15 +95,8 @@ class TrailMaking : Activity() {
             mFrame!!.addView(tv_dynamic)
         }
 
-        // Fetch GestureLibrary from raw
-        mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures)
         val gestureOverlay = findViewById<View>(R.id.gestures_overlay) as GestureOverlayView
         gestureOverlay.setOnTouchListener { v, event -> mGestureDetector!!.onTouchEvent(event) }
-
-        // Loads the gesture library
-        if (!mLibrary!!.load()) {
-            finish()
-        }
     }
 
     override fun onResume() {
