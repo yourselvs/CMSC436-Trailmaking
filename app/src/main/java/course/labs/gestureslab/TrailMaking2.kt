@@ -1,15 +1,8 @@
 package course.labs.gestureslab
 
-import java.util.Random
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
-
 import java.util.ArrayList
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.gesture.GestureLibraries
 import android.gesture.GestureLibrary
 import android.gesture.GestureOverlayView
@@ -27,12 +20,9 @@ import android.view.View
 import android.widget.FrameLayout
 import android.graphics.Color
 import android.widget.TextView
-import java.sql.Time
-import java.sql.Timestamp
-import kotlin.collections.ArrayList
 
 
-class TrailMaking : Activity() {
+class TrailMaking2 : Activity() {
 
     // The Main view
     private var mFrame: FrameLayout? = null
@@ -55,6 +45,9 @@ class TrailMaking : Activity() {
             Pair(604,1143),Pair(1005,273),Pair(558,288),
             Pair(283,254)
     )
+
+    private val numbers = arrayListOf(1,2,3,4,5,6,7,8)
+    private val letters = arrayListOf("A","B","C","D","E","F","G","H")
 
     private val circleTV = ArrayList<TextView>()
 
@@ -81,6 +74,9 @@ class TrailMaking : Activity() {
 
         circlePlacement.shuffle()
 
+        var n = 0
+        var l = 0
+
         //circleplacement
         for(i in 0 .. circlePlacement.size - 1){
             //makes the circleview
@@ -95,7 +91,15 @@ class TrailMaking : Activity() {
             tv_dynamic.y = circlePlacement.get(i).second.toFloat() - 64
             tv_dynamic.textSize = 30f
             tv_dynamic.setTextColor(initTextColor)
-            tv_dynamic.text = (i + 1).toString()
+            //alternates between letters and numbers
+            if((i + 1)%2==0){
+                tv_dynamic.text = (letters.get(l))
+                l++
+            }else{
+                tv_dynamic.text = (numbers.get(n)).toString()
+                n++
+            }
+
             circleTV.add(tv_dynamic)
             mFrame!!.addView(tv_dynamic)
         }
@@ -106,7 +110,7 @@ class TrailMaking : Activity() {
 
     override fun onResume() {
         super.onResume()
-                setupGestureDetector()
+        setupGestureDetector()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -159,16 +163,14 @@ class TrailMaking : Activity() {
                                         previousx = (bview.getmPosx()+128).toInt()
                                         previousy = (bview.getmPosy()+128).toInt()
 
-                                        //TODO start next intent with 1-a-2-b-3-c
-                                        //TODO we should probably make an in between intent that prepares them for the next screen
-                                        if(numberOn == circlePlacement.size + 1){
-                                            val intent = Intent(mFrame!!.context, TrailMaking2::class.java)
-                                            startActivity(intent)
+                                        //TODO start next intent for completion screen
+                                        if(numberOn == 16){
+
                                         }
                                     }
                                     //TODO firebase stuff
-                                   //otherwise record it as not being at a circle
-                                      }else{
+                                    //otherwise record it as not being at a circle
+                                }else{
 
                                 }
                             }
@@ -229,7 +231,7 @@ class TrailMaking : Activity() {
             number = i
         }
         fun getNum():Int{
-           return number
+            return number
         }
 
         // Returns true if the circleView intersects position (x,y)
@@ -289,31 +291,6 @@ class TrailMaking : Activity() {
         }
     }
 
-    inner class TestEvent internal constructor(val timestamp: Long, val timeSinceStart: Long, val buttonPressed: String, val correct: Boolean)
-
-    inner class PathfinderTest internal constructor(val useLetters: Boolean) {
-        private val history: MutableList<TestEvent> = ArrayList()
-        private val startMillis: Long = System.currentTimeMillis()
-        private val startTime: Time = Time(startMillis)
-        private val currentTarget: String = "1"
-
-        fun pressButton(buttonPressed: String) {
-            val pressTimestamp = System.currentTimeMillis()
-            val correct = buttonPressed == currentTarget
-            val pressEvent = TestEvent(pressTimestamp, pressTimestamp - startMillis, buttonPressed, correct)
-            history.add(pressEvent)
-
-            if(correct) {
-                // TODO: adjust current target to next target
-            }
-        }
-
-        fun finishTest() {
-            // TODO: finish test and write to firebase
-        }
-
-    }
-
     override fun onBackPressed() {
         openOptionsMenu()
     }
@@ -338,3 +315,5 @@ class TrailMaking : Activity() {
         private val TAG = "TrailMaking"
     }
 }
+
+
