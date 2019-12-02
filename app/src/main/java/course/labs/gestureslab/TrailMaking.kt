@@ -38,8 +38,10 @@ import kotlinx.android.synthetic.main.main.*
 import android.graphics.drawable.BitmapDrawable
 import android.util.DisplayMetrics
 import android.widget.TextView
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 
-class BubbleActivity : Activity(), OnGesturePerformedListener {
+class BubbleActivity : Activity() {
 
     // The Main view
     private var mFrame: FrameLayout? = null
@@ -50,17 +52,6 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
     // Display dimensions
     private var mDisplayWidth: Int = 0
     private var mDisplayHeight: Int = 0
-
-    // Sound variables
-
-    // AudioManager
-    private var mAudioManager: AudioManager? = null
-    // SoundPool
-    private var mSoundPool: SoundPool? = null
-    // ID for the bubble popping sound
-    private var mSoundID: Int = 0
-    // Audio volume
-    private var mStreamVolume: Float = 0.toFloat()
 
     // Gesture Detector
     private var mGestureDetector: GestureDetector? = null
@@ -82,6 +73,7 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
 
     var previousx: Int = 0
     var previousy: Int = 0
+    var numberOn = 1
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +82,6 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
         mFrame = findViewById<View>(R.id.frame) as FrameLayout
         // Load basic bubble Bitmap
         mBitmap = BitmapFactory.decodeResource(resources, R.drawable.b64)
-
 
         bubblePlacement.shuffle()
 
@@ -111,13 +102,10 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
             mFrame!!.addView(tv_dynamic)
         }
 
-
     // TODO - Fetch GestureLibrary from raw
         mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures)
 
         val gestureOverlay = findViewById<View>(R.id.gestures_overlay) as GestureOverlayView
-
-        gestureOverlay.addOnGesturePerformedListener(this)
 
         gestureOverlay.setOnTouchListener { v, event -> mGestureDetector!!.onTouchEvent(event) }
 
@@ -129,27 +117,7 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
 
     override fun onResume() {
         super.onResume()
-
-        // Manage bubble popping sound
-        // Use AudioManager.STREAM_MUSIC as stream type
-
-        val musicAttribute = AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .build()
-        mSoundPool = SoundPool.Builder()
-                .setMaxStreams(10)
-                .setAudioAttributes(musicAttribute)
-                .build()
-
-        mSoundID = mSoundPool!!.load(this, R.raw.bubble_pop, 1)
-
-        mSoundPool?.apply{
-            setOnLoadCompleteListener { _, _, status ->
                 setupGestureDetector()
-            }
-        }
-
-
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -165,45 +133,34 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
 
     // Set up GestureDetector
     private fun setupGestureDetector() {
-
         mGestureDetector = GestureDetector(this,
                 object : GestureDetector.SimpleOnGestureListener() {
-
                     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
-                        var bool = false
                         var i = 0
-
                         while(i < mFrame!!.childCount){
                             if(mFrame?.getChildAt(i) is BubbleView){
                                 var bview = mFrame?.getChildAt(i) as BubbleView
-                                //TODO - Firebase stuff goes here
-                                //TODO just need to finish with drawing lines and changing the color
+
+                                //First determine if click happens at a bubble
                                 if(bview.intersects(event.x,event.y)){
-                                    var j:Int=0
-                                    for(k in 0 .. bubblePlacement.size - 1){
-                                        if(bview.getmPosx()+128 == bubblePlacement.get(k).first.toFloat()){
-                                            var b = 0
-                                            while(b < mFrame!!.childCount){
-                                                var prevbview = mFrame?.getChildAt(i) as BubbleView
-                                                if(prevbview.getNum() + 1 == bview.getNum()){
-                                                    bubbleTV.get(k).setTextColor(Color.GREEN)
-                                                }
-                                            }
+                                    //next determine if proper button is being clicked
+                                    if(bview.getNum() == numberOn){
+                                        //TODO - Firebase stuff goes here
 
-                                            previousx = (bview.getmPosx()+128).toInt()
-                                            previousy = (bview.getmPosy()+128).toInt()
+                                        bubbleTV.get(numberOn-1).setTextColor(Color.GREEN)
+                                        numberOn++
+                                        //TODO draw lines
+                                        previousx = (bview.getmPosx()+128).toInt()
+                                        previousy = (bview.getmPosy()+128).toInt()
 
-
-
-
-
+                                        //TODO start next intent with 1-a-2-b-3-c
+                                        if(numberOn == 16){
 
                                         }
                                     }
-
-
-
-                                }else{
+                                    //TODO firebase stuff
+                                   //otherwise record it as not being at a bubble
+                                      }else{
 
                                 }
                             }
@@ -220,56 +177,8 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
                 })
     }
 
-    override fun onPause() {
-
-        // Release all SoundPool resources
-
-        mSoundPool!!.unload(mSoundID)
-        mSoundPool!!.release()
-        mSoundPool = null
-
-        super.onPause()
-    }
-
-    override fun onGesturePerformed(overlay: GestureOverlayView, gesture: Gesture) {
-
-        val predictions: ArrayList<Prediction>? = mLibrary?.recognize(gesture)
-
-        if (predictions!!.size > 0) {
-
-            // Get highest-ranked prediction
-            val prediction = predictions[0]
 
 
-            if (prediction.score > MIN_PRED_SCORE) {
-                when (prediction.name) {
-                    "openMenu"-> {
-                        openOptionsMenu()
-                    }
-                    "addTen" -> {
-                        for(i in 0 .. 9){
-                            val r = Random()
-                            val x = r.nextInt(mDisplayWidth - mBitmap!!.width).toFloat()
-                            val y = r.nextInt(mDisplayHeight - mBitmap!!.height).toFloat()
-                            val bubbleView = BubbleView(applicationContext, x, y)
-                            mFrame!!.addView(bubbleView)
-                            bubbleView.start()
-                        }
-                    }
-
-                }
-                Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT)
-                        .show()
-            } else {
-                Toast.makeText(this, "No prediction", Toast.LENGTH_SHORT)
-                        .show()
-            }
-        } else {
-            Toast.makeText(this, "No prediction", Toast.LENGTH_SHORT)
-                    .show()
-        }
-
-    }
     // BubbleView is a View that displays a bubble.
     // This class handles animating, drawing, and popping amongst other
     // actions.
@@ -277,75 +186,30 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
 
     inner class BubbleView internal constructor(context: Context, x: Float, y: Float) : View(context) {
         private val mPainter = Paint()
-        private var mMoverFuture: ScheduledFuture<*>? = null
-        private var mScaledBitmapWidth: Int = 0
-        private var mScaledBitmap: Bitmap? = null
         private val BITMAP_SIZE = 64
-        private val REFRESH_RATE = 40
-        // location, speed and direction of the bubble
+
+        // location of the bubble
         private var mXPos: Float = 0.toFloat()
         private var mYPos: Float = 0.toFloat()
-        private var mDx: Float = 0.toFloat()
-        private var mDy: Float = 0.toFloat()
         private val mRadius: Float
         private val mRadiusSquared: Float
-        private var mRotate: Long = 0
-        private var mDRotate: Long = 0
 
-        //what number is theis bubbleview, and has it been visited
+        //what number is the bubbleview
         private var number = 0
-        private var bool = false
-
-        // Return true if the BubbleView is not on the screen after the move
-        // operation
-        private val isOutOfView: Boolean
-            get() = (mXPos < 0 - mScaledBitmapWidth || mXPos > mDisplayWidth
-                    || mYPos < 0 - mScaledBitmapWidth || mYPos > mDisplayHeight)
 
         init {
             Log.i(TAG, "Creating Bubble at: x:$x y:$y")
 
-            // Create a new random number generator to
-            // randomize size, rotation, speed and direction
-            val r = Random()
 
-            // Creates the bubble bitmap for this BubbleView
-            createScaledBitmap(r)
-
-            // Radius of the Bitmap
-            mRadius = (mScaledBitmapWidth / 2).toFloat()
+            // Radius
+            mRadius = (BITMAP_SIZE * 2).toFloat()
             mRadiusSquared = mRadius * mRadius
-
 
             // Adjust position to center the bubble under user's finger
             mXPos = x - mRadius
             mYPos = y - mRadius
 
-            // Set the BubbleView's speed and direction
-            setSpeedAndDirection(r)
-
-
-
             mPainter.isAntiAlias = true
-
-        }
-
-        private fun setSpeedAndDirection(r: Random) {
-
-                    // No speed
-                    mDx = 0f
-                    mDy = 0f
-        }
-
-        private fun createScaledBitmap(r: Random) {
-
-
-                mScaledBitmapWidth = BITMAP_SIZE * 4
-
-
-            // Create the scaled bitmap using size set above
-            mScaledBitmap = Bitmap.createScaledBitmap(mBitmap!!,
-                    mScaledBitmapWidth, mScaledBitmapWidth, false)
         }
 
         fun getmPosx():Float{
@@ -362,121 +226,27 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
            return number
         }
 
-        fun visit(){
-            bool = true
-        }
-        fun beenvisited():Boolean{
-            return bool
-        }
-
-        // Start moving the BubbleView & updating the display
-        fun start() {
-
-            // Creates a WorkerThread
-            val executor = Executors
-                    .newScheduledThreadPool(1)
-
-            // Execute the run() in Worker Thread every REFRESH_RATE
-            // milliseconds
-            // Save reference to this job in mMoverFuture
-            mMoverFuture = executor.scheduleWithFixedDelay({
-                // Implement movement logic.
-                // Each time this method is run the BubbleView should
-                // move one step. If the BubbleView exits the display,
-                // stop the BubbleView's Worker Thread.
-                // Otherwise, request that the BubbleView be redrawn.
-
-                if (moveWhileOnScreen()) {
-                    postInvalidate()
-                } else
-                    stop(false)
-            }, 0, REFRESH_RATE.toLong(), TimeUnit.MILLISECONDS)
-        }
-
         // Returns true if the BubbleView intersects position (x,y)
         @Synchronized
         fun intersects(x: Float, y: Float): Boolean {
-
             // Return true if the BubbleView intersects position (x,y)
-
             val xDist = x - (mXPos + mRadius)
             val yDist = y - (mYPos + mRadius)
-
             return xDist * xDist + yDist * yDist <= mRadiusSquared
-
-        }
-
-        // Cancel the Bubble's movement
-        // Remove Bubble from mFrame
-        // Play pop sound if the BubbleView was popped
-
-        fun stop(wasPopped: Boolean) {
-
-            if (null != mMoverFuture) {
-
-                if (!mMoverFuture!!.isDone) {
-                    mMoverFuture!!.cancel(true)
-                }
-
-                // This work will be performed on the UI Thread
-                mFrame!!.post {
-                    // Remove the BubbleView from mFrame
-                    mFrame!!.removeView(this@BubbleView)
-
-                    // If the bubble was popped by user,
-                    // play the popping sound
-                    if (wasPopped) {
-                        mSoundPool!!.play(mSoundID, mStreamVolume,
-                                mStreamVolume, 1, 0, 1.0f)
-                    }
-                }
-            }
-        }
-
-        // Change the Bubble's speed and direction
-        @Synchronized
-        fun deflect(velocityX: Float, velocityY: Float) {
-            mDx = velocityX / REFRESH_RATE
-            mDy = velocityY / REFRESH_RATE
         }
 
         // Draw the Bubble at its current location
         @Synchronized
         override fun onDraw(canvas: Canvas) {
-
             // save the canvas
             canvas.save()
 
-            // Increase the rotation of the original image by mDRotate
-            mRotate += mDRotate
-
-            // Rotate the canvas by current rotation
-            // Hint - Rotate around the bubble's center, not its position
-
-            canvas.rotate(mRotate.toFloat(), mXPos + mScaledBitmapWidth / 2, mYPos + mScaledBitmapWidth / 2)
-
             // Draw the bitmap at it's new location
-            canvas.drawBitmap(mScaledBitmap!!, mXPos, mYPos, mPainter)
+            mPainter.color = Color.rgb(0,128,128)
+            canvas.drawCircle(mXPos + mRadius,mYPos + mRadius,mRadius,mPainter)
 
             // Restore the canvas
             canvas.restore()
-
-        }
-
-        // Returns true if the BubbleView is still on the screen after the move
-        // operation
-        @Synchronized
-        private fun moveWhileOnScreen(): Boolean {
-
-            // Move the BubbleView
-
-            mXPos += mDx
-            mXPos = mXPos
-            mYPos += mDy
-            mYPos = mYPos
-
-            return !isOutOfView
-
         }
     }
 
@@ -486,48 +256,21 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         super.onCreateOptionsMenu(menu)
-
         menuInflater.inflate(R.menu.menu, menu)
-
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_still_mode -> {
-                speedMode = STILL
-                return true
-            }
-            R.id.menu_single_speed -> {
-                speedMode = SINGLE
-                return true
-            }
-            R.id.menu_random_mode -> {
-                speedMode = RANDOM
-                return true
-            }
             R.id.quit -> {
-                exitRequested()
+                super.onBackPressed()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
     }
 
-    private fun exitRequested() {
-        super.onBackPressed()
-    }
-
-
     companion object {
-
-        private val MIN_PRED_SCORE = 3.0
-        // These variables are for testing purposes, do not modify
-        private val RANDOM = 0
-        private val SINGLE = 1
-        private val STILL = 2
-        var speedMode = RANDOM
-
-        private val TAG = "Lab-Gestures"
+        private val TAG = "TrailMaking"
     }
 }
