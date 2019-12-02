@@ -1,6 +1,5 @@
 package course.labs.gestureslab
 
-import java.util.ArrayList
 import java.util.Random
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -38,6 +37,9 @@ import kotlinx.android.synthetic.main.main.*
 import android.graphics.drawable.BitmapDrawable
 import android.util.DisplayMetrics
 import android.widget.TextView
+import java.sql.Time
+import java.sql.Timestamp
+import kotlin.collections.ArrayList
 
 class BubbleActivity : Activity(), OnGesturePerformedListener {
 
@@ -451,6 +453,31 @@ class BubbleActivity : Activity(), OnGesturePerformedListener {
             return !isOutOfView
 
         }
+    }
+
+    inner class TestEvent internal constructor(val timestamp: Long, val timeSinceStart: Long, val buttonPressed: String, val correct: Boolean)
+
+    inner class PathfinderTest internal constructor(val useLetters: Boolean) {
+        private val history: MutableList<TestEvent> = ArrayList()
+        private val startMillis: Long = System.currentTimeMillis()
+        private val startTime: Time = Time(startMillis)
+        private val currentTarget: String = "1"
+
+        fun pressButton(buttonPressed: String) {
+            val pressTimestamp = System.currentTimeMillis()
+            val correct = buttonPressed == currentTarget
+            val pressEvent = TestEvent(pressTimestamp, pressTimestamp - startMillis, buttonPressed, correct)
+            history.add(pressEvent)
+
+            if(correct) {
+                // TODO: adjust current target to next target
+            }
+        }
+
+        fun finishTest() {
+            // TODO: finish test and write to firebase
+        }
+
     }
 
     override fun onBackPressed() {
