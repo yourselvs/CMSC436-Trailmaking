@@ -1,28 +1,16 @@
 package course.labs.gestureslab
 
 import java.util.ArrayList
-import java.util.Random
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
 
 import android.app.Activity
 import android.content.Context
-import android.gesture.Gesture
 import android.gesture.GestureLibraries
 import android.gesture.GestureLibrary
 import android.gesture.GestureOverlayView
-import android.gesture.GestureOverlayView.OnGesturePerformedListener
-import android.gesture.Prediction
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.media.AudioAttributes
-import android.media.AudioManager
-import android.media.SoundPool
-import android.media.SoundPool.OnLoadCompleteListener
 import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
@@ -30,16 +18,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.widget.FrameLayout
-import android.widget.Toast
 import android.graphics.Color
-import kotlinx.android.synthetic.main.main.*
-import android.graphics.drawable.BitmapDrawable
-import android.util.DisplayMetrics
 import android.widget.TextView
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.OvalShape
+
 
 class BubbleActivity : Activity() {
 
@@ -59,7 +41,7 @@ class BubbleActivity : Activity() {
     // Gesture Library
     private var mLibrary: GestureLibrary? = null
 
-    val bubblePlacement = arrayListOf(
+    private val bubblePlacement = arrayListOf(
             Triple(161,2116, 0),Triple(169,719,0),Triple(925,586,0),
             Triple(783,1540,0),Triple(226,1246,0),Triple(1207,2165,0),
             Triple(589,2108,0),Triple(1058,1192,0),Triple(593,734,0),
@@ -69,11 +51,20 @@ class BubbleActivity : Activity() {
     )
 
 
-    val bubbleTV = ArrayList<TextView>()
+    private val bubbleTV = ArrayList<TextView>()
 
-    var previousx: Int = 0
-    var previousy: Int = 0
-    var numberOn = 1
+    private var previousx: Int = 0
+    private var previousy: Int = 0
+    private var numberOn = 1
+
+    //Colors
+    private var initTextColor = Color.BLACK
+    private var changedTextColor = Color.GREEN
+    private var bubbleColor = Color.rgb(0,128,128)
+    private var lineColor = Color.GREEN
+
+    //if you want the text color to change on tap as well as draw line
+    private var textColorChange = true
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,28 +78,26 @@ class BubbleActivity : Activity() {
 
         //bubbleplacement
         for(i in 0 .. bubblePlacement.size - 1){
+            //makes the bubbleview
             var bView = BubbleView(mFrame!!.context, bubblePlacement.get(i).first.toFloat(),
                     bubblePlacement.get(i).second.toFloat())
-
-
             bView.setNum(i+1)
             mFrame!!.addView(bView)
 
+            //makes the text views
             val tv_dynamic = TextView(this)
-            tv_dynamic.x = bubblePlacement.get(i).first.toFloat() - 50
-            tv_dynamic.y = bubblePlacement.get(i).second.toFloat() - 50
+            tv_dynamic.x = bubblePlacement.get(i).first.toFloat() - 64
+            tv_dynamic.y = bubblePlacement.get(i).second.toFloat() - 64
             tv_dynamic.textSize = 30f
-            tv_dynamic.setTextColor(Color.BLACK)
+            tv_dynamic.setTextColor(initTextColor)
             tv_dynamic.text = (i + 1).toString()
             bubbleTV.add(tv_dynamic)
             mFrame!!.addView(tv_dynamic)
         }
 
-    // TODO - Fetch GestureLibrary from raw
+        // Fetch GestureLibrary from raw
         mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures)
-
         val gestureOverlay = findViewById<View>(R.id.gestures_overlay) as GestureOverlayView
-
         gestureOverlay.setOnTouchListener { v, event -> mGestureDetector!!.onTouchEvent(event) }
 
         // Loads the gesture library
@@ -125,7 +114,6 @@ class BubbleActivity : Activity() {
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         if (hasFocus) {
-
             // Get the size of the display so this View knows where borders are
             mDisplayWidth = mFrame!!.width
             mDisplayHeight = mFrame!!.height
@@ -137,9 +125,12 @@ class BubbleActivity : Activity() {
     private fun setupGestureDetector() {
         mGestureDetector = GestureDetector(this,
                 object : GestureDetector.SimpleOnGestureListener() {
+
                     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
                         var i = 0
+                        //iterate through all views in frame
                         while(i < mFrame!!.childCount){
+                            //make sure the view is a bubbleview
                             if(mFrame?.getChildAt(i) is BubbleView){
                                 var bview = mFrame?.getChildAt(i) as BubbleView
 
@@ -148,17 +139,25 @@ class BubbleActivity : Activity() {
                                     //next determine if proper button is being clicked
                                     if(bview.getNum() == numberOn){
                                         //TODO - Firebase stuff goes here
-if(numberOn ==1){ previousx = (bview.getmPosx()+128).toInt()
-previousy = (bview.getmPosy()+128).toInt()}
-                                        bubbleTV.get(numberOn-1).setTextColor(Color.GREEN)
-                                        //TODO draw lines
+
+                                        //makes sure that lines start being drawn after first tap
+                                        if(numberOn ==1){
+                                            previousx = (bview.getmPosx()+128).toInt()
+                                            previousy = (bview.getmPosy()+128).toInt()
+                                        }
+                                        //changes text color
+                                        if(textColorChange){
+                                            bubbleTV.get(numberOn-1).setTextColor(changedTextColor)
+                                        }
+                                        //iterates the number in the bubble
                                         numberOn++
 
+                                        //draws lines connecting circles
                                         var lView = LineView(mFrame!!.context, previousx.toFloat(), previousy.toFloat(),
                                                 bview.getmPosx()+128,bview.getmPosy()+128)
-
                                         mFrame!!.addView(lView)
 
+                                        //updates previous circle position
                                         previousx = (bview.getmPosx()+128).toInt()
                                         previousy = (bview.getmPosy()+128).toInt()
 
@@ -208,8 +207,6 @@ previousy = (bview.getmPosy()+128).toInt()}
 
         init {
             Log.i(TAG, "Creating Bubble at: x:$x y:$y")
-
-
             // Radius
             mRadius = (BITMAP_SIZE * 2).toFloat()
             mRadiusSquared = mRadius * mRadius
@@ -251,7 +248,7 @@ previousy = (bview.getmPosy()+128).toInt()}
             canvas.save()
 
             // Draw the bitmap at it's new location
-            mPainter.color = Color.rgb(0,128,128)
+            mPainter.color = bubbleColor
             canvas.drawCircle(mXPos + mRadius,mYPos + mRadius,mRadius,mPainter)
 
             // Restore the canvas
@@ -282,10 +279,10 @@ previousy = (bview.getmPosy()+128).toInt()}
         override fun onDraw(canvas: Canvas) {
             // save the canvas
             canvas.save()
-mPainter.strokeWidth = 10F
+            mPainter.strokeWidth = 10f
             // Draw the bitmap at it's new location
-            mPainter.color = Color.GREEN
-          canvas.drawLine(x1,y1,x2,y2,mPainter)
+            mPainter.color = lineColor
+            canvas.drawLine(x1,y1,x2,y2,mPainter)
 
             // Restore the canvas
             canvas.restore()
