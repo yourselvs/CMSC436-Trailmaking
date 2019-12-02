@@ -12,7 +12,7 @@
         android:label="@string/app_name" >
   
         <activity
-            android:name=".BubbleActivity"
+            android:name=".TrailMaking"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <intent-filter>

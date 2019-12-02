@@ -28,7 +28,7 @@ class TrailMaking2 : Activity() {
     // The Main view
     private var mFrame: FrameLayout? = null
 
-    // Bubble image's bitmap
+    // circle image's bitmap
     private var mBitmap: Bitmap? = null
 
     // Display dimensions
@@ -41,19 +41,19 @@ class TrailMaking2 : Activity() {
     // Gesture Library
     private var mLibrary: GestureLibrary? = null
 
-    private val bubblePlacement = arrayListOf(
-            Triple(161,2116, 0),Triple(169,719,0),Triple(925,586,0),
-            Triple(783,1540,0),Triple(226,1246,0),Triple(1207,2165,0),
-            Triple(589,2108,0),Triple(1058,1192,0),Triple(593,734,0),
-            Triple(440,1662,0),Triple(1188,872,0),Triple(1051,1749,0),
-            Triple(604,1143,0),Triple(1005,273,0),Triple(558,288,0),
-            Triple(283,254,0)
+    private val circlePlacement = arrayListOf(
+            Pair(161,2116),Pair(169,719),Pair(925,586),
+            Pair(783,1540),Pair(226,1246),Pair(1207,2165),
+            Pair(589,2108),Pair(1058,1192),Pair(593,734),
+            Pair(440,1662),Pair(1188,872),Pair(1051,1749),
+            Pair(604,1143),Pair(1005,273),Pair(558,288),
+            Pair(283,254)
     )
 
     private val numbers = arrayListOf(1,2,3,4,5,6,7,8)
     private val letters = arrayListOf("A","B","C","D","E","F","G","H")
 
-    private val bubbleTV = ArrayList<TextView>()
+    private val circleTV = ArrayList<TextView>()
 
     private var previousx: Int = 0
     private var previousy: Int = 0
@@ -62,7 +62,7 @@ class TrailMaking2 : Activity() {
     //Colors
     private var initTextColor = Color.BLACK
     private var changedTextColor = Color.GREEN
-    private var bubbleColor = Color.rgb(0,128,128)
+    private var circleColor = Color.rgb(0,128,128)
     private var lineColor = Color.GREEN
 
     //if you want the text color to change on tap as well as draw line
@@ -73,26 +73,26 @@ class TrailMaking2 : Activity() {
         setContentView(R.layout.main)
         // Set up user interface
         mFrame = findViewById<View>(R.id.frame) as FrameLayout
-        // Load basic bubble Bitmap
+        // Load basic circle Bitmap
         mBitmap = BitmapFactory.decodeResource(resources, R.drawable.b64)
 
-        bubblePlacement.shuffle()
+        circlePlacement.shuffle()
 
         var n = 0
         var l = 0
 
-        //bubbleplacement
-        for(i in 0 .. bubblePlacement.size - 1){
-            //makes the bubbleview
-            var bView = BubbleView(mFrame!!.context, bubblePlacement.get(i).first.toFloat(),
-                    bubblePlacement.get(i).second.toFloat())
+        //circleplacement
+        for(i in 0 .. circlePlacement.size - 1){
+            //makes the circleview
+            var bView = CircleView(mFrame!!.context, circlePlacement.get(i).first.toFloat(),
+                    circlePlacement.get(i).second.toFloat())
             bView.setNum(i+1)
             mFrame!!.addView(bView)
 
             //makes the text views
             val tv_dynamic = TextView(this)
-            tv_dynamic.x = bubblePlacement.get(i).first.toFloat() - 64
-            tv_dynamic.y = bubblePlacement.get(i).second.toFloat() - 64
+            tv_dynamic.x = circlePlacement.get(i).first.toFloat() - 64
+            tv_dynamic.y = circlePlacement.get(i).second.toFloat() - 64
             tv_dynamic.textSize = 30f
             tv_dynamic.setTextColor(initTextColor)
             //alternates between letters and numbers
@@ -104,7 +104,7 @@ class TrailMaking2 : Activity() {
                 n++
             }
 
-            bubbleTV.add(tv_dynamic)
+            circleTV.add(tv_dynamic)
             mFrame!!.addView(tv_dynamic)
         }
 
@@ -143,11 +143,11 @@ class TrailMaking2 : Activity() {
                         var i = 0
                         //iterate through all views in frame
                         while(i < mFrame!!.childCount){
-                            //make sure the view is a bubbleview
-                            if(mFrame?.getChildAt(i) is BubbleView){
-                                var bview = mFrame?.getChildAt(i) as BubbleView
+                            //make sure the view is a circleview
+                            if(mFrame?.getChildAt(i) is CircleView){
+                                var bview = mFrame?.getChildAt(i) as CircleView
 
-                                //First determine if click happens at a bubble
+                                //First determine if click happens at a circle
                                 if(bview.intersects(event.x,event.y)){
                                     //next determine if proper button is being clicked
                                     if(bview.getNum() == numberOn){
@@ -160,9 +160,9 @@ class TrailMaking2 : Activity() {
                                         }
                                         //changes text color
                                         if(textColorChange){
-                                            bubbleTV.get(numberOn-1).setTextColor(changedTextColor)
+                                            circleTV.get(numberOn-1).setTextColor(changedTextColor)
                                         }
-                                        //iterates the number in the bubble
+                                        //iterates the number in the circle
                                         numberOn++
 
                                         //draws lines connecting circles
@@ -180,7 +180,7 @@ class TrailMaking2 : Activity() {
                                         }
                                     }
                                     //TODO firebase stuff
-                                    //otherwise record it as not being at a bubble
+                                    //otherwise record it as not being at a circle
                                 }else{
 
                                 }
@@ -200,31 +200,31 @@ class TrailMaking2 : Activity() {
 
 
 
-    // BubbleView is a View that displays a bubble.
+    // circleView is a View that displays a circle.
     // This class handles animating, drawing, and popping amongst other
     // actions.
-    // A new BubbleView is created for each bubble on the display
+    // A new circleView is created for each circle on the display
 
-    inner class BubbleView internal constructor(context: Context, x: Float, y: Float) : View(context) {
+    inner class CircleView internal constructor(context: Context, x: Float, y: Float) : View(context) {
         private val mPainter = Paint()
         private val BITMAP_SIZE = 64
 
-        // location of the bubble
+        // location of the circle
         private var mXPos: Float = 0.toFloat()
         private var mYPos: Float = 0.toFloat()
         private val mRadius: Float
         private val mRadiusSquared: Float
 
-        //what number is the bubbleview
+        //what number is the circleview
         private var number = 0
 
         init {
-            Log.i(TAG, "Creating Bubble at: x:$x y:$y")
+            Log.i(TAG, "Creating circle at: x:$x y:$y")
             // Radius
             mRadius = (BITMAP_SIZE * 2).toFloat()
             mRadiusSquared = mRadius * mRadius
 
-            // Adjust position to center the bubble under user's finger
+            // Adjust position to center the circle under user's finger
             mXPos = x - mRadius
             mYPos = y - mRadius
 
@@ -245,23 +245,23 @@ class TrailMaking2 : Activity() {
             return number
         }
 
-        // Returns true if the BubbleView intersects position (x,y)
+        // Returns true if the circleView intersects position (x,y)
         @Synchronized
         fun intersects(x: Float, y: Float): Boolean {
-            // Return true if the BubbleView intersects position (x,y)
+            // Return true if the circleView intersects position (x,y)
             val xDist = x - (mXPos + mRadius)
             val yDist = y - (mYPos + mRadius)
             return xDist * xDist + yDist * yDist <= mRadiusSquared
         }
 
-        // Draw the Bubble at its current location
+        // Draw the circle at its current location
         @Synchronized
         override fun onDraw(canvas: Canvas) {
             // save the canvas
             canvas.save()
 
             // Draw the bitmap at it's new location
-            mPainter.color = bubbleColor
+            mPainter.color = circleColor
             canvas.drawCircle(mXPos + mRadius,mYPos + mRadius,mRadius,mPainter)
 
             // Restore the canvas
@@ -287,7 +287,7 @@ class TrailMaking2 : Activity() {
             mPainter.isAntiAlias = true
         }
 
-        // Draw the Bubble at its current location
+        // Draw the circle at its current location
         @Synchronized
         override fun onDraw(canvas: Canvas) {
             // save the canvas
