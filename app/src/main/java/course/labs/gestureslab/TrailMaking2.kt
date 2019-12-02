@@ -48,6 +48,7 @@ class TrailMaking2 : Activity() {
 
     private val numbers = arrayListOf(1,2,3,4,5,6,7,8)
     private val letters = arrayListOf("A","B","C","D","E","F","G","H")
+    private val numbers_letters = arrayListOf("1","A","2","B","3","C","4","D","5","E","6","F","7","G","8","H")
 
     private val circleTV = ArrayList<TextView>()
 
@@ -63,6 +64,9 @@ class TrailMaking2 : Activity() {
 
     //if you want the text color to change on tap as well as draw line
     private var textColorChange = true
+
+    // Test initialized when the activity starts
+    private lateinit var test: PathfinderTest
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,6 +110,8 @@ class TrailMaking2 : Activity() {
 
         val gestureOverlay = findViewById<View>(R.id.gestures_overlay) as GestureOverlayView
         gestureOverlay.setOnTouchListener { v, event -> mGestureDetector!!.onTouchEvent(event) }
+
+        test = PathfinderTest(numbers_letters)
     }
 
     override fun onResume() {
@@ -138,10 +144,9 @@ class TrailMaking2 : Activity() {
 
                                 //First determine if click happens at a circle
                                 if(bview.intersects(event.x,event.y)){
+                                    test.pressButton(numbers_letters[bview.getNum()])
                                     //next determine if proper button is being clicked
                                     if(bview.getNum() == numberOn){
-                                        //TODO - Firebase stuff goes here
-
                                         //makes sure that lines start being drawn after first tap
                                         if(numberOn ==1){
                                             previousx = (bview.getmPosx()+128).toInt()
@@ -168,10 +173,9 @@ class TrailMaking2 : Activity() {
 
                                         }
                                     }
-                                    //TODO firebase stuff
-                                    //otherwise record it as not being at a circle
-                                }else{
-
+                                //otherwise record it as not being at a circle
+                                } else {
+                                    test.pressButton("MISS")
                                 }
                             }
                             i++

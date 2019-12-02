@@ -45,6 +45,8 @@ class TrailMaking : Activity() {
             Pair(283,254)
     )
 
+    private val numbers = arrayListOf("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16")
+
     private val circleTV = ArrayList<TextView>()
 
     private var previousx: Int = 0
@@ -59,6 +61,9 @@ class TrailMaking : Activity() {
 
     //if you want the text color to change on tap as well as draw line
     private var textColorChange = true
+
+    // Test initialized when the activity starts
+    private lateinit var test: PathfinderTest
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,6 +96,8 @@ class TrailMaking : Activity() {
 
         val gestureOverlay = findViewById<View>(R.id.gestures_overlay) as GestureOverlayView
         gestureOverlay.setOnTouchListener { v, event -> mGestureDetector!!.onTouchEvent(event) }
+
+        test = PathfinderTest(numbers)
     }
 
     override fun onResume() {
@@ -123,9 +130,9 @@ class TrailMaking : Activity() {
 
                                 //First determine if click happens at a circle
                                 if(bview.intersects(event.x,event.y)){
+                                    test.pressButton(bview.getNum().toString())
                                     //next determine if proper button is being clicked
                                     if(bview.getNum() == numberOn){
-                                        //TODO - Firebase stuff goes here
 
                                         //makes sure that lines start being drawn after first tap
                                         if(numberOn ==1){
@@ -155,10 +162,10 @@ class TrailMaking : Activity() {
                                             startActivity(intent)
                                         }
                                     }
-                                    //TODO firebase stuff
-                                   //otherwise record it as not being at a circle
-                                      }else{
-
+                                //TODO firebase stuff
+                                //otherwise record it as not being at a circle
+                                } else {
+                                    test.pressButton("MISS")
                                 }
                             }
                             i++
@@ -278,31 +285,6 @@ class TrailMaking : Activity() {
         }
     }
 
-    inner class TestEvent internal constructor(val timestamp: Long, val timeSinceStart: Long, val buttonPressed: String, val correct: Boolean)
-
-    inner class PathfinderTest internal constructor(val useLetters: Boolean) {
-        private val history: MutableList<TestEvent> = ArrayList()
-        private val startMillis: Long = System.currentTimeMillis()
-        private val startTime: Time = Time(startMillis)
-        private val currentTarget: String = "1"
-
-        fun pressButton(buttonPressed: String) {
-            val pressTimestamp = System.currentTimeMillis()
-            val correct = buttonPressed == currentTarget
-            val pressEvent = TestEvent(pressTimestamp, pressTimestamp - startMillis, buttonPressed, correct)
-            history.add(pressEvent)
-
-            if(correct) {
-                // TODO: adjust current target to next target
-            }
-        }
-
-        fun finishTest() {
-            // TODO: finish test and write to firebase
-        }
-
-    }
-
     override fun onBackPressed() {
         openOptionsMenu()
     }
@@ -325,5 +307,80 @@ class TrailMaking : Activity() {
 
     companion object {
         private val TAG = "TrailMaking"
+    }
+}
+
+
+class TestEvent internal constructor(val timestamp: Long, val timeSinceStart: Long, val buttonTarget: String, val buttonPressed: String, val correct: String)
+
+class PathfinderTest internal constructor(private val targets: List<String>) {
+    private val history: MutableList<TestEvent> = ArrayList()
+    private val startMillis: Long = System.currentTimeMillis()
+    private val startTime: Time = Time(startMillis)
+    private var currentTarget: String = targets[0]
+    private var currentTargetNum: Int = 0
+
+    private var numErrors = 0
+    private var numMisses = 0
+    private var numIncorrect = 0
+
+    var finished = false
+        private set
+
+    init {
+        Log.i(TAG, "Test initialized at time ${startTime}")
+    }
+
+    fun pressButton(buttonPressed: String) {
+        if(!finished) {
+            val pressTimestamp = System.currentTimeMillis()
+            val status = if (buttonPressed == currentTarget) "CORRECT" else if (buttonPressed == "MISS") "MISS" else "INCORRECT"
+            val pressEvent = TestEvent(pressTimestamp, pressTimestamp - startMillis, currentTarget, buttonPressed, status)
+            history.add(pressEvent)
+
+            if (status == "MISS") {
+                numMisses++
+                numErrors++
+            }
+            else if (status == "INCORRECT") {
+                numIncorrect++
+                numErrors++
+            }
+            else { // status is correct
+                // Increment the current target number
+                // If it is the last one, finish the test
+                if (++currentTargetNum == targets.size) {
+                    finishTest()
+                }
+                else {
+                    currentTarget = targets[currentTargetNum]
+                }
+            }
+
+            Log.i(TAG, "Button pressed with value ${buttonPressed}, target ${currentTarget},  status ${status}, and timestamp ${pressTimestamp - startMillis}")
+        }
+        else {
+            Log.i(TAG, "Button pressed but test was already finished")
+        }
+    }
+
+    fun finishTest() {
+        finished = true
+
+        val endMillis = System.currentTimeMillis()
+
+        val endTime = Time(endMillis)
+        val testDuration = endMillis - startMillis
+        val numComplete = currentTargetNum
+        val isComplete = numComplete == targets.size
+        val numAttempts = history.size
+
+        Log.i(TAG, "Test finished at timestamp ${endTime}")
+
+        // TODO: Record data into firebase
+    }
+
+    companion object {
+        private val TAG = "PathfinderTest"
     }
 }
