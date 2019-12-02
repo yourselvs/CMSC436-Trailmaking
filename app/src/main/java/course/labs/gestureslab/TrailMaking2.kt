@@ -4,7 +4,6 @@ import java.util.ArrayList
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.gesture.GestureLibraries
 import android.gesture.GestureLibrary
 import android.gesture.GestureOverlayView
@@ -24,7 +23,7 @@ import android.graphics.Color
 import android.widget.TextView
 
 
-class BubbleActivity : Activity() {
+class TrailMaking2 : Activity() {
 
     // The Main view
     private var mFrame: FrameLayout? = null
@@ -51,6 +50,8 @@ class BubbleActivity : Activity() {
             Triple(283,254,0)
     )
 
+    private val numbers = arrayListOf(1,2,3,4,5,6,7,8)
+    private val letters = arrayListOf("A","B","C","D","E","F","G","H")
 
     private val bubbleTV = ArrayList<TextView>()
 
@@ -77,6 +78,9 @@ class BubbleActivity : Activity() {
 
         bubblePlacement.shuffle()
 
+        var n = 0
+        var l = 0
+
         //bubbleplacement
         for(i in 0 .. bubblePlacement.size - 1){
             //makes the bubbleview
@@ -91,7 +95,15 @@ class BubbleActivity : Activity() {
             tv_dynamic.y = bubblePlacement.get(i).second.toFloat() - 64
             tv_dynamic.textSize = 30f
             tv_dynamic.setTextColor(initTextColor)
-            tv_dynamic.text = (i + 1).toString()
+            //alternates between letters and numbers
+            if((i + 1)%2==0){
+                tv_dynamic.text = (letters.get(l))
+                l++
+            }else{
+                tv_dynamic.text = (numbers.get(n)).toString()
+                n++
+            }
+
             bubbleTV.add(tv_dynamic)
             mFrame!!.addView(tv_dynamic)
         }
@@ -109,7 +121,7 @@ class BubbleActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
-                setupGestureDetector()
+        setupGestureDetector()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -162,16 +174,14 @@ class BubbleActivity : Activity() {
                                         previousx = (bview.getmPosx()+128).toInt()
                                         previousy = (bview.getmPosy()+128).toInt()
 
-                                        //TODO start next intent with 1-a-2-b-3-c
-                                        //TODO we should probably make an in between intent that prepares them for the next screen
-                                        if(numberOn == bubblePlacement.size + 1){
-                                            val intent = Intent(mFrame!!.context, TrailMaking2::class.java)
-                                            startActivity(intent)
+                                        //TODO start next intent for completion screen
+                                        if(numberOn == 16){
+
                                         }
                                     }
                                     //TODO firebase stuff
-                                   //otherwise record it as not being at a bubble
-                                      }else{
+                                    //otherwise record it as not being at a bubble
+                                }else{
 
                                 }
                             }
@@ -232,7 +242,7 @@ class BubbleActivity : Activity() {
             number = i
         }
         fun getNum():Int{
-           return number
+            return number
         }
 
         // Returns true if the BubbleView intersects position (x,y)
@@ -316,3 +326,5 @@ class BubbleActivity : Activity() {
         private val TAG = "TrailMaking"
     }
 }
+
+
