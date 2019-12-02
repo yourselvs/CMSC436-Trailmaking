@@ -89,6 +89,8 @@ class BubbleActivity : Activity() {
         for(i in 0 .. bubblePlacement.size - 1){
             var bView = BubbleView(mFrame!!.context, bubblePlacement.get(i).first.toFloat(),
                     bubblePlacement.get(i).second.toFloat())
+
+
             bView.setNum(i+1)
             mFrame!!.addView(bView)
 
@@ -146,10 +148,17 @@ class BubbleActivity : Activity() {
                                     //next determine if proper button is being clicked
                                     if(bview.getNum() == numberOn){
                                         //TODO - Firebase stuff goes here
-
+if(numberOn ==1){ previousx = (bview.getmPosx()+128).toInt()
+previousy = (bview.getmPosy()+128).toInt()}                          
                                         bubbleTV.get(numberOn-1).setTextColor(Color.GREEN)
-                                        numberOn++
                                         //TODO draw lines
+                                        numberOn++
+
+                                        var lView = LineView(mFrame!!.context, previousx.toFloat(), previousy.toFloat(),
+                                                bview.getmPosx()+128,bview.getmPosy()+128)
+
+                                        mFrame!!.addView(lView)
+
                                         previousx = (bview.getmPosx()+128).toInt()
                                         previousy = (bview.getmPosy()+128).toInt()
 
@@ -248,8 +257,39 @@ class BubbleActivity : Activity() {
             // Restore the canvas
             canvas.restore()
         }
+    }
 
+    inner class LineView internal constructor(context: Context, xstart: Float, ystart: Float, xend:Float, yend: Float) : View(context) {
+        private val mPainter = Paint()
 
+        // location
+        var x1:Float = 0f
+        var x2:Float = 0f
+        var y1:Float = 0f
+        var y2:Float = 0f
+
+        init {
+            x1 = xstart
+            x2 = xend
+            y1 = ystart
+            y2 = yend
+
+            mPainter.isAntiAlias = true
+        }
+
+        // Draw the Bubble at its current location
+        @Synchronized
+        override fun onDraw(canvas: Canvas) {
+            // save the canvas
+            canvas.save()
+mPainter.strokeWidth = 10F
+            // Draw the bitmap at it's new location
+            mPainter.color = Color.GREEN
+          canvas.drawLine(x1,y1,x2,y2,mPainter)
+
+            // Restore the canvas
+            canvas.restore()
+        }
     }
 
     override fun onBackPressed() {
