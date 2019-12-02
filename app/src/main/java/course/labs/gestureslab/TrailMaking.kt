@@ -248,6 +248,8 @@ class BubbleActivity : Activity() {
             // Restore the canvas
             canvas.restore()
         }
+
+
     }
 
     override fun onBackPressed() {
