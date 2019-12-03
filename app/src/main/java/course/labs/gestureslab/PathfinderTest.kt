@@ -79,7 +79,6 @@ class PathfinderTest internal constructor(
 
         Log.i(TAG, "Test finished at timestamp ${endTime}")
 
-        // TODO: Test if recording data in firebase even works
         val data = HashMap<String, Any>()
 
         data["userID"] = userID

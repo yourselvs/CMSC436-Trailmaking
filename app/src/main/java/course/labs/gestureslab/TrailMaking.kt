@@ -19,17 +19,12 @@ import android.widget.FrameLayout
 import android.graphics.Color
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.StorageReference
-import java.sql.Time
 
 
 class TrailMaking : Activity() {
 
     // The Main view
     private var mFrame: FrameLayout? = null
-
-    // circle image's bitmap
-    private var mBitmap: Bitmap? = null
 
     // Display dimensions
     private var mDisplayWidth: Int = 0
@@ -57,9 +52,9 @@ class TrailMaking : Activity() {
 
     //Colors
     private var initTextColor = Color.BLACK
-    private var changedTextColor = Color.GREEN
-    private var circleColor = Color.rgb(0,128,128)
-    private var lineColor = Color.GREEN
+    private var circleColor = Color.rgb(255,255,255)
+    private var lineColor = Color.rgb(34,177,66)
+    private var changedTextColor = lineColor
 
     //if you want the text color to change on tap as well as draw line
     private var textColorChange = true
@@ -67,15 +62,11 @@ class TrailMaking : Activity() {
     // Test initialized when the activity starts
     private lateinit var test: PathfinderTest
 
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main)
         // Set up user interface
         mFrame = findViewById<View>(R.id.frame) as FrameLayout
-        // Load basic circle Bitmap
-        mBitmap = BitmapFactory.decodeResource(resources, R.drawable.b64)
 
         circlePlacement.shuffle()
 
@@ -111,7 +102,7 @@ class TrailMaking : Activity() {
 
     override fun onResume() {
         super.onResume()
-                setupGestureDetector()
+        setupGestureDetector()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -140,11 +131,11 @@ class TrailMaking : Activity() {
 
                                 //First determine if click happens at a circle
                                 if(bview.intersects(event.x,event.y)){
+                                    //alternates between letters and numbers
                                     test.pressButton(bview.getNum().toString())
                                     hit = true
                                     //next determine if proper button is being clicked
                                     if(bview.getNum() == numberOn){
-
                                         //makes sure that lines start being drawn after first tap
                                         if(numberOn ==1){
                                             previousx = (bview.getmPosx()+128).toInt()
@@ -173,8 +164,6 @@ class TrailMaking : Activity() {
                                         //iterates the number in the circle
                                         numberOn++
                                     }
-
-
                                 }
                             }
                             i++
@@ -198,8 +187,6 @@ class TrailMaking : Activity() {
 
 
     // circleView is a View that displays a circle.
-    // This class handles animating, drawing, and popping amongst other
-    // actions.
     // A new circleView is created for each circle on the display
 
     inner class CircleView internal constructor(context: Context, x: Float, y: Float) : View(context) {
@@ -276,6 +263,7 @@ class TrailMaking : Activity() {
         var y2:Float = 0f
 
         init {
+            Log.i(TAG, "Creating line at: x:$x1 y:$y1 to x:$x2 y:$y2")
             x1 = xstart
             x2 = xend
             y1 = ystart
@@ -314,6 +302,7 @@ class TrailMaking : Activity() {
             R.id.quit -> {
                 val intent = Intent(this, MainMenu::class.java)
                 startActivity(intent)
+                test.finishTest()
                 finish()
                 return true
             }

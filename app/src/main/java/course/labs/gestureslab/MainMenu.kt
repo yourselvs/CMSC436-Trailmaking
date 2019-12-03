@@ -23,11 +23,9 @@ class MainMenu : Activity() {
         val handSpinner = findViewById<Spinner>(R.id.handSpinner)
         val difficultySpinner = findViewById<Spinner>(R.id.difficultySpinner)
 
-
         val handAdapter = ArrayAdapter.createFromResource(
                 this, R.array.handedness, R.layout.dropdown_item
         )
-
 
         val difficultyAdapter = ArrayAdapter.createFromResource(
                 this, R.array.difficulties, R.layout.dropdown_item
@@ -44,7 +42,6 @@ class MainMenu : Activity() {
                 (parent.getChildAt(0) as TextView).setTextColor(Color.BLACK)
                 handedness = handSpinner.getItemAtPosition(pos).toString()
             }
-
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
@@ -56,7 +53,6 @@ class MainMenu : Activity() {
                 (parent.getChildAt(0) as TextView).setTextColor(Color.BLACK)
                 difficulty = difficultySpinner.getItemAtPosition(pos).toString()
             }
-
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
     }
@@ -67,7 +63,6 @@ class MainMenu : Activity() {
 
         userID = mETid.getText().toString()
         userDOB = mETdob.getText().toString()
-
 
         if (userID.isEmpty() || userDOB.isEmpty()) {
             Toast.makeText(applicationContext, "Please enter ID and Date of Birth", Toast.LENGTH_LONG).show()

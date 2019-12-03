@@ -26,9 +26,6 @@ class TrailMaking2 : Activity() {
     // The Main view
     private var mFrame: FrameLayout? = null
 
-    // circle image's bitmap
-    private var mBitmap: Bitmap? = null
-
     // Display dimensions
     private var mDisplayWidth: Int = 0
     private var mDisplayHeight: Int = 0
@@ -57,9 +54,9 @@ class TrailMaking2 : Activity() {
 
     //Colors
     private var initTextColor = Color.BLACK
-    private var changedTextColor = Color.GREEN
-    private var circleColor = Color.rgb(0,128,128)
-    private var lineColor = Color.GREEN
+    private var circleColor = Color.rgb(255,255,255)
+    private var lineColor = Color.rgb(34,177,66)
+    private var changedTextColor = lineColor
 
     //if you want the text color to change on tap as well as draw line
     private var textColorChange = true
@@ -72,8 +69,6 @@ class TrailMaking2 : Activity() {
         setContentView(R.layout.main)
         // Set up user interface
         mFrame = findViewById<View>(R.id.frame) as FrameLayout
-        // Load basic circle Bitmap
-        mBitmap = BitmapFactory.decodeResource(resources, R.drawable.b64)
 
         circlePlacement.shuffle()
 
@@ -129,7 +124,6 @@ class TrailMaking2 : Activity() {
             // Get the size of the display so this View knows where borders are
             mDisplayWidth = mFrame!!.width
             mDisplayHeight = mFrame!!.height
-
         }
     }
 
@@ -173,8 +167,6 @@ class TrailMaking2 : Activity() {
                                         previousx = (bview.getmPosx()+128).toInt()
                                         previousy = (bview.getmPosy()+128).toInt()
 
-
-
                                         if(numberOn == circlePlacement.size){
                                             val intent = Intent(mFrame!!.context, EndMenu::class.java)
                                             startActivity(intent)
@@ -184,7 +176,6 @@ class TrailMaking2 : Activity() {
                                         //iterates the number in the circle
                                         numberOn++
                                     }
-                                //otherwise record it as not being at a circle
                                 }
                             }
                             i++
@@ -208,8 +199,6 @@ class TrailMaking2 : Activity() {
 
 
     // circleView is a View that displays a circle.
-    // This class handles animating, drawing, and popping amongst other
-    // actions.
     // A new circleView is created for each circle on the display
 
     inner class CircleView internal constructor(context: Context, x: Float, y: Float) : View(context) {
@@ -286,6 +275,7 @@ class TrailMaking2 : Activity() {
         var y2:Float = 0f
 
         init {
+            Log.i(TAG, "Creating line at: x:$x1 y:$y1 to x:$x2 y:$y2")
             x1 = xstart
             x2 = xend
             y1 = ystart
@@ -324,6 +314,7 @@ class TrailMaking2 : Activity() {
             R.id.quit -> {
                 val intent = Intent(this, MainMenu::class.java)
                 startActivity(intent)
+                test.finishTest()
                 finish()
                 return true
             }

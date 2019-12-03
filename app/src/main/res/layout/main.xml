@@ -3,6 +3,7 @@
     android:id="@+id/gestures_overlay"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#00000000"
     android:gestureColor="#00FFFFFF"
     android:gestureStrokeWidth="0"
     android:gestureStrokeAngleThreshold="0"
@@ -13,7 +14,8 @@
         android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"></FrameLayout>
+        android:layout_centerInParent="true"
+        android:background="#00000000"></FrameLayout>
 
 </android.gesture.GestureOverlayView>
 
