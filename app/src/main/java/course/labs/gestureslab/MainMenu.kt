@@ -21,6 +21,7 @@ class MainMenu : Activity() {
         val handSpinner = findViewById<Spinner>(R.id.handSpinner)
         val difficultySpinner = findViewById<Spinner>(R.id.difficultySpinner)
 
+
         val handAdapter = ArrayAdapter.createFromResource(
                 this, R.array.handedness, R.layout.dropdown_item
         )
@@ -62,8 +63,8 @@ class MainMenu : Activity() {
         userDOB = mETdob.getText().toString()
 
         // TODO idk why but it's not checking to see if the data entry is empty or not
-        if (userID.length == 0 || userDOB.length == 0) {
-            Toast.makeText(applicationContext, "Missing information!", Toast.LENGTH_LONG).show()
+        if (userID.isEmpty() || userDOB.isEmpty()) {
+            Toast.makeText(applicationContext, "Please enter ID and Date of Birth", Toast.LENGTH_LONG).show()
             return
         } else {
             if (difficulty == "Easy") {

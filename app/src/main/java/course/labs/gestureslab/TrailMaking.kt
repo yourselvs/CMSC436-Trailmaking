@@ -161,15 +161,14 @@ class TrailMaking : Activity() {
                                         previousx = (bview.getmPosx()+128).toInt()
                                         previousy = (bview.getmPosy()+128).toInt()
 
-                                        //TODO start next intent with 1-a-2-b-3-c
-                                        //TODO we should probably make an in between intent that prepares them for the next screen
+
                                         if(numberOn == circlePlacement.size + 1){
                                             val intent = Intent(mFrame!!.context, EndMenu::class.java)
                                             startActivity(intent)
                                         }
                                     }
-                                //TODO firebase stuff
-                                //otherwise record it as not being at a circle
+
+
                                 }
                             }
                             i++
