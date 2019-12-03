@@ -163,7 +163,7 @@ class TrailMaking : Activity() {
 
 
                                         if(numberOn == circlePlacement.size + 1){
-                                            val intent = Intent(mFrame!!.context, EndMenu::class.java)
+                                            val intent = Intent(applicationContext, EndMenu::class.java)
                                             startActivity(intent)
                                         }
                                     }
