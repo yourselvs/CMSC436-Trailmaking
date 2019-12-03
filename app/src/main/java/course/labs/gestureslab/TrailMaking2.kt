@@ -3,6 +3,7 @@ package course.labs.gestureslab
 import java.util.ArrayList
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.gesture.GestureLibraries
 import android.gesture.GestureLibrary
 import android.gesture.GestureOverlayView
@@ -170,7 +171,8 @@ class TrailMaking2 : Activity() {
 
                                         //TODO start next intent for completion screen
                                         if(numberOn == 16){
-
+                                            val intent = Intent(mFrame!!.context, EndMenu::class.java)
+                                            startActivity(intent)
                                         }
                                     }
                                 //otherwise record it as not being at a circle
