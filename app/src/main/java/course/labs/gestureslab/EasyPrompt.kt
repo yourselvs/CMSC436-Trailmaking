@@ -4,6 +4,8 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.content.Intent
+import android.view.Menu
+import android.view.MenuItem
 
 class EasyPrompt : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,8 +26,29 @@ class EasyPrompt : Activity() {
         intent.putExtra(HAND, handedness)
         intent.putExtra(DIFFICULTY, difficulty)
         startActivity(intent)
+        finish()
+    }
+    override fun onBackPressed() {
+        openOptionsMenu()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.quit -> {
+                val intent = Intent(this, MainMenu::class.java)
+                startActivity(intent)
+                finish()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
     companion object {
         private val ID = "ID"
         private val DOB = "DOB"

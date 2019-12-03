@@ -14,6 +14,7 @@ class EndMenu : Activity() {
     fun backToBeginning(view: View) {
         val intent = Intent(this, MainMenu::class.java)
         startActivity(intent)
+        finish()
     }
 
     companion object {

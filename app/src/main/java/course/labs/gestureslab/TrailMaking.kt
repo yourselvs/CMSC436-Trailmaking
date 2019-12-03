@@ -149,8 +149,6 @@ class TrailMaking : Activity() {
                                         if(textColorChange){
                                             circleTV.get(numberOn-1).setTextColor(changedTextColor)
                                         }
-                                        //iterates the number in the circle
-                                        numberOn++
 
                                         //draws lines connecting circles
                                         var lView = LineView(mFrame!!.context, previousx.toFloat(), previousy.toFloat(),
@@ -161,11 +159,14 @@ class TrailMaking : Activity() {
                                         previousx = (bview.getmPosx()+128).toInt()
                                         previousy = (bview.getmPosy()+128).toInt()
 
-
-                                        if(numberOn == circlePlacement.size + 1){
+                                        if(numberOn == circlePlacement.size){
                                             val intent = Intent(applicationContext, EndMenu::class.java)
                                             startActivity(intent)
+                                            finish()
                                         }
+
+                                        //iterates the number in the circle
+                                        numberOn++
                                     }
 
 
@@ -308,6 +309,7 @@ class TrailMaking : Activity() {
             R.id.quit -> {
                 val intent = Intent(this, MainMenu::class.java)
                 startActivity(intent)
+                finish()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

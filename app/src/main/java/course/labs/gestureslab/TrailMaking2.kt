@@ -4,8 +4,6 @@ import java.util.ArrayList
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.gesture.GestureLibraries
-import android.gesture.GestureLibrary
 import android.gesture.GestureOverlayView
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -145,11 +143,12 @@ class TrailMaking2 : Activity() {
 
                                 //First determine if click happens at a circle
                                 if(bview.intersects(event.x,event.y)){
+                                    //alternates between letters and numbers
                                     test.pressButton(numbers_letters[bview.getNum()-1])
                                     //next determine if proper button is being clicked
                                     if(bview.getNum() == numberOn){
                                         //makes sure that lines start being drawn after first tap
-                                        if(numberOn ==1){
+                                        if(numberOn == 1){
                                             previousx = (bview.getmPosx()+128).toInt()
                                             previousy = (bview.getmPosy()+128).toInt()
                                         }
@@ -157,8 +156,6 @@ class TrailMaking2 : Activity() {
                                         if(textColorChange){
                                             circleTV.get(numberOn-1).setTextColor(changedTextColor)
                                         }
-                                        //iterates the number in the circle
-                                        numberOn++
 
                                         //draws lines connecting circles
                                         var lView = LineView(mFrame!!.context, previousx.toFloat(), previousy.toFloat(),
@@ -169,11 +166,16 @@ class TrailMaking2 : Activity() {
                                         previousx = (bview.getmPosx()+128).toInt()
                                         previousy = (bview.getmPosy()+128).toInt()
 
-                                        
-                                        if(numberOn == circlePlacement.size + 1){
+
+
+                                        if(numberOn == circlePlacement.size){
                                             val intent = Intent(mFrame!!.context, EndMenu::class.java)
                                             startActivity(intent)
+                                            finish()
                                         }
+
+                                        //iterates the number in the circle
+                                        numberOn++
                                     }
                                 //otherwise record it as not being at a circle
                                 } else {
@@ -312,6 +314,7 @@ class TrailMaking2 : Activity() {
             R.id.quit -> {
                 val intent = Intent(this, MainMenu::class.java)
                 startActivity(intent)
+                finish()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

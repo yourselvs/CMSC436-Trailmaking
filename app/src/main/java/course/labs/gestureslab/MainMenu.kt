@@ -80,6 +80,7 @@ class MainMenu : Activity() {
                 intent.putExtra(HAND, handedness)
                 intent.putExtra(DIFFICULTY, difficulty)
                 startActivity(intent)
+                finish()
             } else if (difficulty == "Hard") {
                 val intent = Intent(this, HardPrompt::class.java)
                 intent.putExtra(ID, userID)
@@ -87,6 +88,7 @@ class MainMenu : Activity() {
                 intent.putExtra(HAND, handedness)
                 intent.putExtra(DIFFICULTY, difficulty)
                 startActivity(intent)
+                finish()
             }
         }
     }
