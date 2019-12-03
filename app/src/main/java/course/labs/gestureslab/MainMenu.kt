@@ -68,9 +68,17 @@ class MainMenu : Activity() {
         } else {
             if (difficulty == "Easy") {
                 val intent = Intent(this, EasyPrompt::class.java)
+                intent.putExtra("ID", userID)
+                intent.putExtra("DOB", userDOB)
+                intent.putExtra("HANDEDNESS", handedness)
+                intent.putExtra("DIFFICULTY", difficulty)
                 startActivity(intent)
             } else if (difficulty == "Hard") {
                 val intent = Intent(this, HardPrompt::class.java)
+                intent.putExtra("ID", userID)
+                intent.putExtra("DOB", userDOB)
+                intent.putExtra("HANDEDNESS", handedness)
+                intent.putExtra("DIFFICULTY", difficulty)
                 startActivity(intent)
             }
         }

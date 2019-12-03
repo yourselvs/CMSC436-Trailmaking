@@ -12,7 +12,17 @@ class EasyPrompt : Activity() {
     }
 
     fun startEasyTask(view: View) {
+        val oldIntent = getIntent()
+        val userID = oldIntent.getStringExtra("ID")
+        val userDOB = oldIntent.getStringExtra("DOB")
+        val handedness = oldIntent.getStringExtra("HANDEDNESS")
+        val difficulty = oldIntent.getStringExtra("DIFFICULTY")
+
         val intent = Intent(this, TrailMaking::class.java)
+        intent.putExtra("ID", userID)
+        intent.putExtra("DOB", userDOB)
+        intent.putExtra("HANDEDNESS", handedness)
+        intent.putExtra("DIFFICULTY", difficulty)
         startActivity(intent)
     }
 }
