@@ -1,11 +1,13 @@
 package course.labs.gestureslab
 
 import android.app.Activity
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView.OnItemSelectedListener
-import android.content.Intent
 import android.widget.*
+import android.widget.AdapterView.OnItemSelectedListener
+
 
 class MainMenu : Activity() {
 
@@ -25,6 +27,8 @@ class MainMenu : Activity() {
         val handAdapter = ArrayAdapter.createFromResource(
                 this, R.array.handedness, R.layout.dropdown_item
         )
+
+
         val difficultyAdapter = ArrayAdapter.createFromResource(
                 this, R.array.difficulties, R.layout.dropdown_item
         )
@@ -37,6 +41,7 @@ class MainMenu : Activity() {
                     parent: AdapterView<*>, view: View,
                     pos: Int, id: Long
             ) {
+                (parent.getChildAt(0) as TextView).setTextColor(Color.BLACK)
                 handedness = handSpinner.getItemAtPosition(pos).toString()
             }
 
@@ -48,6 +53,7 @@ class MainMenu : Activity() {
                     parent: AdapterView<*>, view: View,
                     pos: Int, id: Long
             ) {
+                (parent.getChildAt(0) as TextView).setTextColor(Color.BLACK)
                 difficulty = difficultySpinner.getItemAtPosition(pos).toString()
             }
 
@@ -62,7 +68,7 @@ class MainMenu : Activity() {
         userID = mETid.getText().toString()
         userDOB = mETdob.getText().toString()
 
-        // TODO idk why but it's not checking to see if the data entry is empty or not
+
         if (userID.isEmpty() || userDOB.isEmpty()) {
             Toast.makeText(applicationContext, "Please enter ID and Date of Birth", Toast.LENGTH_LONG).show()
             return
