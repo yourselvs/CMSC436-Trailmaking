@@ -306,7 +306,8 @@ class TrailMaking : Activity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.quit -> {
-                super.onBackPressed()
+                val intent = Intent(this, MainMenu::class.java)
+                startActivity(intent)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

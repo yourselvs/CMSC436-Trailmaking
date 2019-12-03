@@ -145,7 +145,7 @@ class TrailMaking2 : Activity() {
 
                                 //First determine if click happens at a circle
                                 if(bview.intersects(event.x,event.y)){
-                                    test.pressButton(numbers_letters[bview.getNum()])
+                                    test.pressButton(numbers_letters[bview.getNum()-1])
                                     //next determine if proper button is being clicked
                                     if(bview.getNum() == numberOn){
                                         //makes sure that lines start being drawn after first tap
@@ -169,8 +169,8 @@ class TrailMaking2 : Activity() {
                                         previousx = (bview.getmPosx()+128).toInt()
                                         previousy = (bview.getmPosy()+128).toInt()
 
-                                        //TODO start next intent for completion screen
-                                        if(numberOn == 16){
+                                        
+                                        if(numberOn == circlePlacement.size + 1){
                                             val intent = Intent(mFrame!!.context, EndMenu::class.java)
                                             startActivity(intent)
                                         }
@@ -310,7 +310,8 @@ class TrailMaking2 : Activity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.quit -> {
-                super.onBackPressed()
+                val intent = Intent(this, MainMenu::class.java)
+                startActivity(intent)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

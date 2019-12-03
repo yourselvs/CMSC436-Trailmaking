@@ -82,7 +82,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/difficultyText"
         android:layout_marginTop="0dp"
-        android:padding="16dp" />
+        android:padding="16dp"
+    android:textColor="@color/common_google_signin_btn_text_dark"/>
 
     <Button
         android:id="@+id/continueButton"

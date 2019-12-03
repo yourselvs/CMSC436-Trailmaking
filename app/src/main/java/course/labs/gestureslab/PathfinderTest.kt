@@ -75,6 +75,10 @@ class PathfinderTest internal constructor(private val targets: List<String>) {
     }
 
     companion object {
-        private val TAG = "PathfinderTest"
+        private val ID = "ID"
+        private val DOB = "DOB"
+        private val HAND = "HANDEDNESS"
+        private val DIFFICULTY = "DIFFICULTY"
+        private val TAG = "TrailMaking"
     }
 }
