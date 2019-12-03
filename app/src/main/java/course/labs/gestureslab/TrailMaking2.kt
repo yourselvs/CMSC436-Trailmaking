@@ -171,7 +171,7 @@ class TrailMaking2 : Activity() {
 
                                         //TODO start next intent for completion screen
                                         if(numberOn == 16){
-                                            val intent = Intent(mFrame!!.context, EndMenu::class.java)
+                                            val intent = Intent(applicationContext, EndMenu::class.java)
                                             startActivity(intent)
                                         }
                                     }
