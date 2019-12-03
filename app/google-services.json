@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "3076684815",
+    "firebase_url": "https://cmsc436-trailmaking.firebaseio.com",
+    "project_id": "cmsc436-trailmaking",
+    "storage_bucket": "cmsc436-trailmaking.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:3076684815:android:4a39b34df78ce48c58377a",
+        "android_client_info": {
+          "package_name": "course.labs.gestureslab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "3076684815-94er8hv1v3gtci6df1btjhmkvidcn870.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "course.labs.gestureslab",
+            "certificate_hash": "e89d12bd2c534f45e182ab2dda2faa8c0f902b88"
+          }
+        },
+        {
+          "client_id": "3076684815-cjpj9cm446hml4j10p2e70t418vgl44s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4GaoUZjGUP_pXA51OODebR21WDWN7jiw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "3076684815-cjpj9cm446hml4j10p2e70t418vgl44s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

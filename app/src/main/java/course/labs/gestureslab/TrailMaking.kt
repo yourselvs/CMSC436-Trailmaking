@@ -18,6 +18,8 @@ import android.view.View
 import android.widget.FrameLayout
 import android.graphics.Color
 import android.widget.TextView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.StorageReference
 import java.sql.Time
 
 
@@ -64,6 +66,8 @@ class TrailMaking : Activity() {
 
     // Test initialized when the activity starts
     private lateinit var test: PathfinderTest
+
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,6 +125,7 @@ class TrailMaking : Activity() {
                 object : GestureDetector.SimpleOnGestureListener() {
 
                     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
+                        var hit = false
                         var i = 0
                         //iterate through all views in frame
                         while(i < mFrame!!.childCount){
@@ -131,6 +136,7 @@ class TrailMaking : Activity() {
                                 //First determine if click happens at a circle
                                 if(bview.intersects(event.x,event.y)){
                                     test.pressButton(bview.getNum().toString())
+                                    hit = true
                                     //next determine if proper button is being clicked
                                     if(bview.getNum() == numberOn){
 
@@ -164,12 +170,15 @@ class TrailMaking : Activity() {
                                     }
                                 //TODO firebase stuff
                                 //otherwise record it as not being at a circle
-                                } else {
-                                    test.pressButton("MISS")
                                 }
                             }
                             i++
                         }
+
+                        if (!hit) {
+                            test.pressButton("MISS")
+                        }
+
                         return true
                     }
 
@@ -338,6 +347,8 @@ class PathfinderTest internal constructor(private val targets: List<String>) {
             val pressEvent = TestEvent(pressTimestamp, pressTimestamp - startMillis, currentTarget, buttonPressed, status)
             history.add(pressEvent)
 
+            Log.i(TAG, "Button pressed with value ${buttonPressed}, target ${currentTarget},  status ${status}, and timestamp ${pressTimestamp - startMillis}")
+
             if (status == "MISS") {
                 numMisses++
                 numErrors++
@@ -356,8 +367,6 @@ class PathfinderTest internal constructor(private val targets: List<String>) {
                     currentTarget = targets[currentTargetNum]
                 }
             }
-
-            Log.i(TAG, "Button pressed with value ${buttonPressed}, target ${currentTarget},  status ${status}, and timestamp ${pressTimestamp - startMillis}")
         }
         else {
             Log.i(TAG, "Button pressed but test was already finished")
