@@ -13,7 +13,7 @@
 
     <string
         name="dob_prompt">
-        Please enter your date of birth (MM/YY):
+        Please enter your date of birth:
     </string>
 
     <string-array name="handedness">

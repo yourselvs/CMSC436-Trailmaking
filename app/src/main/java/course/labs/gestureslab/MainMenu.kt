@@ -3,12 +3,9 @@ package course.labs.gestureslab
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
 import android.content.Intent
+import android.widget.*
 
 class MainMenu : Activity() {
 
@@ -58,11 +55,14 @@ class MainMenu : Activity() {
     }
 
     fun collectUserInfo(view: View) {
-        userID = R.id.idEdit.toString()
-        userDOB = R.id.dobEdit.toString()
+        var mETid = findViewById<EditText>(R.id.idEdit)
+        var mETdob = findViewById<EditText>(R.id.dobEdit)
+
+        userID = mETid.getText().toString()
+        userDOB = mETdob.getText().toString()
 
         // TODO idk why but it's not checking to see if the data entry is empty or not
-        if (userID == " " || userDOB == " ") {
+        if (userID.isEmpty() || userDOB.isEmpty()) {
             Toast.makeText(applicationContext, "Missing information!", Toast.LENGTH_LONG).show()
             return
         } else {
