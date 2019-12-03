@@ -30,8 +30,7 @@
         android:layout_below="@+id/idPrompt"
         android:layout_marginTop="0dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="" />
+        android:hint="12345"/>
 
     <TextView
         android:id="@+id/dobPrompt"
@@ -49,8 +48,7 @@
         android:layout_below="@+id/dobPrompt"
         android:layout_marginTop="0dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="" />
+        android:hint="MM/YY"/>
 
     <TextView
         android:id="@+id/handText"

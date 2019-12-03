@@ -15,4 +15,12 @@ class EndMenu : Activity() {
         val intent = Intent(this, MainMenu::class.java)
         startActivity(intent)
     }
+
+    companion object {
+        private val ID = "ID"
+        private val DOB = "DOB"
+        private val HAND = "HANDEDNESS"
+        private val DIFFICULTY = "DIFFICULTY"
+        private val TAG = "TrailMaking"
+    }
 }
