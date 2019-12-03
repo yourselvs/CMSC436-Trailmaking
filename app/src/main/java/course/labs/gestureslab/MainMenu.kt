@@ -25,10 +25,10 @@ class MainMenu : Activity() {
         val difficultySpinner = findViewById<Spinner>(R.id.difficultySpinner)
 
         val handAdapter = ArrayAdapter.createFromResource(
-            this, R.array.handedness, R.layout.dropdown_item
+                this, R.array.handedness, R.layout.dropdown_item
         )
         val difficultyAdapter = ArrayAdapter.createFromResource(
-            this, R.array.difficulties, R.layout.dropdown_item
+                this, R.array.difficulties, R.layout.dropdown_item
         )
 
         handSpinner.adapter = handAdapter
@@ -36,8 +36,8 @@ class MainMenu : Activity() {
 
         handSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>, view: View,
-                pos: Int, id: Long
+                    parent: AdapterView<*>, view: View,
+                    pos: Int, id: Long
             ) {
                 handedness = handSpinner.getItemAtPosition(pos).toString()
             }
@@ -47,8 +47,8 @@ class MainMenu : Activity() {
 
         difficultySpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>, view: View,
-                pos: Int, id: Long
+                    parent: AdapterView<*>, view: View,
+                    pos: Int, id: Long
             ) {
                 difficulty = difficultySpinner.getItemAtPosition(pos).toString()
             }
