@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="In the easy version of the trail-making test, you will be given 16 bubbles that are scattered across the screen. These bubbles are all randomly marked with numbers between 1-16, without repeats. When the task starts, press the bubbles in numerical order, starting with 1 and ending with 16. Please press continue when you are ready."
+        android:textSize="30sp"/>
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:onClick="startEasyTask"
+        android:text="Continue" />
+</RelativeLayout>

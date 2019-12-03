@@ -5,4 +5,34 @@
     <string name="single_speed_mode_string">Single Speed Mode</string>
     <string name="random_speed_mode_string">Random Speed Mode</string>
     <string name="quit_string">Quit</string>
+
+    <string
+        name="id_prompt">
+        Please enter your ID:
+    </string>
+
+    <string
+        name="dob_prompt">
+        Please enter your date of birth (MM/YY):
+    </string>
+
+    <string-array name="handedness">
+        <item>Right</item>
+        <item>Left</item>
+    </string-array>
+
+    <string-array
+        name="difficulties">
+        <item>Easy</item>
+        <item>Hard</item>
+    </string-array>
+
+    <string
+        name="handedness_prompt">
+        Pick your dominant hand:
+    </string>
+
+    <string name="difficulty_prompt">
+        Pick your desired difficulty:
+    </string>
 </resources>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_margin"
+    tools:context=".MainMenu">
+
+    <TextView
+        android:id="@+id/welcomePrompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome to the Trail-Making test!"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/idPrompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcomePrompt"
+        android:layout_marginTop="10dp"
+        android:padding="16dp"
+        android:text="@string/id_prompt" />
+
+    <EditText
+        android:id="@+id/idEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/idPrompt"
+        android:layout_marginTop="0dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/dobPrompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/idEdit"
+        android:layout_marginTop="20dp"
+        android:padding="16dp"
+        android:text="@string/dob_prompt" />
+
+    <EditText
+        android:id="@+id/dobEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dobPrompt"
+        android:layout_marginTop="0dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/handText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dobEdit"
+        android:layout_marginTop="20dp"
+        android:padding="16dp"
+        android:text="@string/handedness_prompt" />
+
+    <Spinner
+        android:id="@+id/handSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/handText"
+        android:layout_marginTop="0dp"
+        android:padding="16dp" />
+
+    <TextView
+        android:id="@+id/difficultyText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/handSpinner"
+        android:layout_marginTop="20dp"
+        android:padding="16dp"
+        android:text="@string/difficulty_prompt" />
+
+    <Spinner
+        android:id="@+id/difficultySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/difficultyText"
+        android:layout_marginTop="0dp"
+        android:padding="16dp" />
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="100dp"
+        android:onClick="collectUserInfo"
+        android:text="Continue" />
+
+</RelativeLayout>
