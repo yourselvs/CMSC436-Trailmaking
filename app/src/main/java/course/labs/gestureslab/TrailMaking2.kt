@@ -139,6 +139,7 @@ class TrailMaking2 : Activity() {
                 object : GestureDetector.SimpleOnGestureListener() {
 
                     override fun onSingleTapConfirmed(event: MotionEvent): Boolean {
+                        var hit = false
                         var i = 0
                         //iterate through all views in frame
                         while(i < mFrame!!.childCount){
@@ -150,6 +151,7 @@ class TrailMaking2 : Activity() {
                                 if(bview.intersects(event.x,event.y)){
                                     //alternates between letters and numbers
                                     test.pressButton(numbers_letters[bview.getNum()-1])
+                                    hit = true
                                     //next determine if proper button is being clicked
                                     if(bview.getNum() == numberOn){
                                         //makes sure that lines start being drawn after first tap
@@ -183,12 +185,15 @@ class TrailMaking2 : Activity() {
                                         numberOn++
                                     }
                                 //otherwise record it as not being at a circle
-                                } else {
-                                    test.pressButton("MISS")
                                 }
                             }
                             i++
                         }
+
+                        if (!hit) {
+                            test.pressButton("MISS")
+                        }
+
                         return true
                     }
 
