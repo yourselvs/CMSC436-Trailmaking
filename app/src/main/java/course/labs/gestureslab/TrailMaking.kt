@@ -315,6 +315,10 @@ class TrailMaking : Activity() {
     }
 
     companion object {
+        private val ID = "ID"
+        private val DOB = "DOB"
+        private val HAND = "HANDEDNESS"
+        private val DIFFICULTY = "DIFFICULTY"
         private val TAG = "TrailMaking"
     }
 }

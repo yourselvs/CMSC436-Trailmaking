@@ -62,25 +62,33 @@ class MainMenu : Activity() {
         userDOB = mETdob.getText().toString()
 
         // TODO idk why but it's not checking to see if the data entry is empty or not
-        if (userID.isEmpty() || userDOB.isEmpty()) {
+        if (userID.length == 0 || userDOB.length == 0) {
             Toast.makeText(applicationContext, "Missing information!", Toast.LENGTH_LONG).show()
             return
         } else {
             if (difficulty == "Easy") {
                 val intent = Intent(this, EasyPrompt::class.java)
-                intent.putExtra("ID", userID)
-                intent.putExtra("DOB", userDOB)
-                intent.putExtra("HANDEDNESS", handedness)
-                intent.putExtra("DIFFICULTY", difficulty)
+                intent.putExtra(ID, userID)
+                intent.putExtra(DOB, userDOB)
+                intent.putExtra(HAND, handedness)
+                intent.putExtra(DIFFICULTY, difficulty)
                 startActivity(intent)
             } else if (difficulty == "Hard") {
                 val intent = Intent(this, HardPrompt::class.java)
-                intent.putExtra("ID", userID)
-                intent.putExtra("DOB", userDOB)
-                intent.putExtra("HANDEDNESS", handedness)
-                intent.putExtra("DIFFICULTY", difficulty)
+                intent.putExtra(ID, userID)
+                intent.putExtra(DOB, userDOB)
+                intent.putExtra(HAND, handedness)
+                intent.putExtra(DIFFICULTY, difficulty)
                 startActivity(intent)
             }
         }
+    }
+
+    companion object {
+        private val ID = "ID"
+        private val DOB = "DOB"
+        private val HAND = "HANDEDNESS"
+        private val DIFFICULTY = "DIFFICULTY"
+        private val TAG = "TrailMaking"
     }
 }
