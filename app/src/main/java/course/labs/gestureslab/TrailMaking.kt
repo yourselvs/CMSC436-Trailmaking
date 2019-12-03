@@ -101,7 +101,12 @@ class TrailMaking : Activity() {
         val gestureOverlay = findViewById<View>(R.id.gestures_overlay) as GestureOverlayView
         gestureOverlay.setOnTouchListener { v, event -> mGestureDetector!!.onTouchEvent(event) }
 
-        test = PathfinderTest(numbers)
+        val id = intent.getStringExtra(ID)
+        val dob = intent.getStringExtra(DOB)
+        val hand = intent.getStringExtra(HAND)
+        val difficulty = intent.getStringExtra(DIFFICULTY)
+
+        test = PathfinderTest(numbers, id, dob, hand, difficulty)
     }
 
     override fun onResume() {

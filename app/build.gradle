@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "course.labs.gestureslab"
-        minSdkVersion 21
+        minSdkVersion 26
         targetSdkVersion 26
 
         testApplicationId "course.labs.gestureslab.tests"

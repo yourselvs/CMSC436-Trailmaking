@@ -1,16 +1,24 @@
 package course.labs.gestureslab
 
 import android.util.Log
-import java.sql.Time
+import com.google.firebase.firestore.FirebaseFirestore
+import java.time.LocalDateTime
 
 
+class PathfinderTest internal constructor(
+        private val targets: List<String>,
+        private val userID: String,
+        private val userDOB: String,
+        private val userHand: String,
+        private val difficulty: String
+) {
+    inner class TestEvent internal constructor(val timestamp: Long, val timeSinceStart: Long, val buttonTarget: String, val buttonPressed: String, val status: String)
 
-class PathfinderTest internal constructor(private val targets: List<String>) {
-    inner class TestEvent internal constructor(val timestamp: Long, val timeSinceStart: Long, val buttonTarget: String, val buttonPressed: String, val correct: String)
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     
     private val history: MutableList<TestEvent> = ArrayList()
     private val startMillis: Long = System.currentTimeMillis()
-    private val startTime: Time = Time(startMillis)
+    private val startTime = LocalDateTime.now()
     private var currentTarget: String = targets[0]
     private var currentTargetNum: Int = 0
 
@@ -63,7 +71,7 @@ class PathfinderTest internal constructor(private val targets: List<String>) {
 
         val endMillis = System.currentTimeMillis()
 
-        val endTime = Time(endMillis)
+        val endTime = LocalDateTime.now()
         val testDuration = endMillis - startMillis
         val numComplete = currentTargetNum
         val isComplete = numComplete == targets.size
@@ -71,7 +79,57 @@ class PathfinderTest internal constructor(private val targets: List<String>) {
 
         Log.i(TAG, "Test finished at timestamp ${endTime}")
 
-        // TODO: Record data into firebase
+        // TODO: Test if recording data in firebase even works
+        val data = HashMap<String, Any>()
+
+        data["userID"] = userID
+        data["userDOB"] = userDOB
+        data["userHand"] = userHand
+        data["testDifficulty"] = difficulty
+        data["testStartTimestamp"] = startMillis
+        data["testEndTimestamp"] = endMillis
+        data["testDuration"] = testDuration
+        data["testIsComplete"] = isComplete
+        data["numComplete"] = numComplete
+        data["numAttempts"] = numAttempts
+        data["numErrors"] = numErrors
+        data["numMisses"] = numMisses
+        data["numIncorrect"] = numIncorrect
+
+
+        (db.collection("tests")
+                .add(data)
+                .addOnSuccessListener { result ->
+                    Log.d(TAG, "DocumentSnapshot added with ID: " + result.id)
+
+                    writeHistory(result.id)
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error adding document", e)
+                })
+    }
+
+    private fun writeHistory(id: String) {
+        history.forEach {
+            val event = HashMap<String, Any>()
+
+            event["status"] = it.status
+            event["buttonPressed"] = it.buttonPressed
+            event["buttonTarget"] = it.buttonTarget
+            event["timeSinceStart"] = it.timeSinceStart
+            event["timestamp"] = it.timestamp
+
+            db.collection("tests")
+                    .document(id)
+                    .collection("events")
+                    .add(event)
+                    .addOnSuccessListener { result ->
+                        Log.d(TAG, "DocumentSnapshot event added with ID: " + result.id)
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error adding event document", e)
+                    }
+        }
     }
 
     companion object {
